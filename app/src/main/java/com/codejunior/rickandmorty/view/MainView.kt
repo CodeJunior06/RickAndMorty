@@ -3,6 +3,8 @@ package com.codejunior.rickandmorty.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.codejunior.rickandmorty.CharacterAdapter
 import com.codejunior.rickandmorty.databinding.ActivityMainViewBinding
 import com.codejunior.rickandmorty.extension.toastMessage
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
@@ -23,14 +25,18 @@ class MainView : AppCompatActivity() {
         viewModel.initConsumer()
 
         viewModel.listCharacter.observe(this, {
-            println(it)
+            bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(this,2)
+            bindingMain.recyclerCharacter.adapter = CharacterAdapter(it.results)
         })
+
         viewModel.toastMessage.observe(this, {
 
             if (it.equals("ERROR RESPONSE")) {
                 toastMessage(it.toString())
             }
         })
+
+
 
     }
 }
