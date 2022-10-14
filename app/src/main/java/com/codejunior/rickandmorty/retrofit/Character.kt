@@ -1,4 +1,4 @@
-package com.codejunior.rickandmorty.model
+package com.codejunior.rickandmorty.retrofit
 
 import com.google.gson.annotations.SerializedName
 
