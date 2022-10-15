@@ -11,7 +11,6 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemCharacterBinding.bind(view)
 
     fun render(character: Character, onClickListener: (Character) -> Unit) {
-        binding.characterStatus.text = character.status
         binding.characterSpecie.text = character.species
         binding.characterName.text = character.name
         binding.imgCharacter.setOnClickListener { onClickListener(character) }
