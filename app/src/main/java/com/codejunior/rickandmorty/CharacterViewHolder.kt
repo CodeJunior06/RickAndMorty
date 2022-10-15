@@ -8,13 +8,14 @@ import com.codejunior.rickandmorty.retrofit.Character
 
 class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        private val binding = ItemCharacterBinding.bind(view)
+    private val binding = ItemCharacterBinding.bind(view)
 
-        fun render(character:Character){
-            binding.characterStatus.text = character.status
-            binding.characterSpecie.text = character.species
-            binding.characterName.text = character.name
-            Glide.with(binding.imgCharacter.context).load(character.image).into(binding.imgCharacter)
-        }
+    fun render(character: Character, onClickListener: (Character) -> Unit) {
+        binding.characterStatus.text = character.status
+        binding.characterSpecie.text = character.species
+        binding.characterName.text = character.name
+        binding.imgCharacter.setOnClickListener { onClickListener(character) }
+        Glide.with(binding.imgCharacter.context).load(character.image).into(binding.imgCharacter)
+    }
 
 }

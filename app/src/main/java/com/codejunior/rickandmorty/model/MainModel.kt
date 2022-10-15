@@ -8,9 +8,16 @@ import javax.inject.Inject
 
 class MainModel @Inject constructor(private val retrofit: ICharacterAPI) {
 
-    suspend fun getResponse() : CharacterResponse?{
-       return withContext(Dispatchers.IO){
+    suspend fun getResponse(): CharacterResponse? {
+        return withContext(Dispatchers.IO) {
             val response = retrofit.getAllQuotes(1)
+            response.body()
+        }
+    }
+
+    suspend fun getResponseDinamic(page: Int): CharacterResponse? {
+        return withContext(Dispatchers.IO) {
+            val response = retrofit.getAllQuotes(page)
             response.body()
         }
     }

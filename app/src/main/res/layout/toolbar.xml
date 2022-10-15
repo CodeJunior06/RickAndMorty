@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content"
+    tools:context=".view.MainView">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -10,33 +11,56 @@
         android:layout_height="wrap_content"
         android:background="@color/black"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" >
+        android:theme="?attr/actionBarTheme">
 
         <LinearLayout
+            android:id="@+id/linearPrevResponse"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/prevResponse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_baseline_arrow_back_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="20dp"
                 android:text="CHARACTER"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                android:paddingStart="20dp"
-                android:textSize="17dp"/>
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/linearAfterResponse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginEnd="20dp"
-            >
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp">
 
             <ImageButton
-
+                android:id="@+id/afterResponse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_arrow_forward_24"/>
+                android:backgroundTint="@color/black"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_baseline_arrow_forward_24" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>

@@ -31,4 +31,29 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         return
 
     }
+    fun cicloConsumer(next:Boolean) {
+
+        runBlocking {
+            if(next){
+                response = mainModel.getResponseDinamic(getStringtoInt(response!!.info.next))
+            }else{
+                response = mainModel.getResponseDinamic(getStringtoInt(response!!.info.prev))
+            }
+
+        }
+
+        if (response == null) {
+            toastMessage.value = "ERROR RESPONSE"
+            return
+        }
+
+        listCharacter.value = response!!
+        return
+
+    }
+
+     fun getStringtoInt(nextOrPrev:String) :Int {
+        val list = nextOrPrev.split("=")
+        return list[1].toInt()
+    }
 }
