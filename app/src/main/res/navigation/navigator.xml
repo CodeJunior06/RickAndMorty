@@ -3,21 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigator"
-    app:startDestination="@id/mainView">
-
+    app:startDestination="@id/characterFragment">
+    <fragment
+        android:id="@+id/characterFragment"
+        android:name="com.codejunior.rickandmorty.view.CharacterFragment"
+        android:label="fragment_character"
+        tools:layout="@layout/fragment_character" >
+        <action
+            android:id="@+id/action_characterFragment_to_informationFragment"
+            app:destination="@id/informationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/informationFragment"
         android:name="com.codejunior.rickandmorty.view.InformationFragment"
-        android:label="InformationFragment" />
-    <navigation android:id="@+id/navigation"
-        app:startDestination="@id/mainView">
-        <activity
-            android:id="@+id/mainView"
-            android:name="com.codejunior.rickandmorty.view.MainView"
-            android:label="activity_main_view"
-            tools:layout="@layout/activity_main_view" />
+        android:label="InformationFragment" >
         <action
-            android:id="@+id/action_global_informationFragment"
-            app:destination="@id/informationFragment" />
-    </navigation>
+            android:id="@+id/action_informationFragment_to_characterFragment"
+            app:destination="@id/characterFragment" />
+    </fragment>
 </navigation>
