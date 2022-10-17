@@ -13,7 +13,6 @@ class MainView : AppCompatActivity() {
 
     private lateinit var _binding: ActivityMainViewBinding
     private val bindingMain get() = _binding
-    private val viewModel: MainViewModel by viewModels()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -29,36 +29,29 @@
     </androidx.cardview.widget.CardView>
 
 
-    <LinearLayout
-        android:id="@+id/status_species"
+    <TextView
+        android:layout_marginTop="7dp"
+        android:id="@+id/character_specie"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:text="SPECIE"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-
-
-        <TextView
-            android:id="@+id/character_specie"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="SPECIE" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/character_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/status_species"
         android:text="NOMBRE"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/status_species"
-        app:layout_constraintStart_toStartOf="@+id/status_species"
-        app:layout_constraintTop_toBottomOf="@+id/status_species"
-        android:textStyle="bold"/>
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/character_specie"
+        app:layout_constraintStart_toStartOf="@+id/character_specie"
+        app:layout_constraintTop_toBottomOf="@+id/character_specie" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.codejunior.rickandmorty.CharacterAdapter
 import com.codejunior.rickandmorty.R
+import com.codejunior.rickandmorty.view.adapter.CharacterAdapter
 import com.codejunior.rickandmorty.databinding.FragmentCharacterBinding
 import com.codejunior.rickandmorty.extension.toastMessage
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
@@ -38,12 +38,12 @@ class CharacterFragment : Fragment() {
         viewModel.initConsumer()
 
         viewModel.listCharacter.observe(viewLifecycleOwner) {
-            when (viewModel.getStringtoInt(it.info.next)) {
+            when (viewModel.getStringToInt(it.info.next)) {
                 2 -> {
                     bindingMain.include.linearPrevResponse.visibility = View.GONE
                     bindingMain.include.linearTitle.visibility = View.VISIBLE
                 }
-                null -> {
+                -1 -> {
                     bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
                     bindingMain.include.linearAfterResponse.visibility = View.GONE
                 }
@@ -53,11 +53,14 @@ class CharacterFragment : Fragment() {
                 }
 
             }
+            viewModel.getPage(it.info.next)
+
             bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
             bindingMain.recyclerCharacter.adapter =
-                CharacterAdapter(it.results) { model ->
+                CharacterAdapter(it!!.results ) { model ->
                     toastMessage(model.name)
-                    findNavController().navigate(R.id.action_characterFragment_to_informationFragment)
+                    this.arguments?.putParcelable("character",model)
+                    findNavController().navigate(R.id.action_characterFragment_to_informationFragment,arguments)
                 }
             bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
         }
@@ -67,12 +70,19 @@ class CharacterFragment : Fragment() {
                 toastMessage(it.toString())
             }
         }
+
         bindingMain.include.afterResponse.setOnClickListener {
             viewModel.cicloConsumer(true)
         }
+
         bindingMain.include.prevResponse.setOnClickListener {
             viewModel.cicloConsumer(false)
         }
+
+        viewModel.pageChange.observe(viewLifecycleOwner){
+            bindingMain.pageChange.text = it!!.toString()
+        }
+
     }
 
 }

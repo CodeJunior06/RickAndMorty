@@ -1,7 +1,7 @@
 package com.codejunior.rickandmorty.model
 
-import com.codejunior.rickandmorty.retrofit.CharacterResponse
-import com.codejunior.rickandmorty.retrofit.network.ICharacterAPI
+import com.codejunior.rickandmorty.domain.retrofit.model.CharacterResponse
+import com.codejunior.rickandmorty.domain.retrofit.network.ICharacterAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

@@ -11,12 +11,18 @@
         tools:layout="@layout/fragment_character" >
         <action
             android:id="@+id/action_characterFragment_to_informationFragment"
-            app:destination="@id/informationFragment" />
+            app:destination="@id/informationFragment" >
+        </action>
+        <argument
+            android:name="character"
+            app:argType="com.codejunior.rickandmorty.domain.retrofit.model.Character" />
+
     </fragment>
     <fragment
         android:id="@+id/informationFragment"
         android:name="com.codejunior.rickandmorty.view.InformationFragment"
-        android:label="InformationFragment" >
+        android:label="InformationFragment"
+        tools:layout="@layout/fragment_information">
         <action
             android:id="@+id/action_informationFragment_to_characterFragment"
             app:destination="@id/characterFragment" />

@@ -1,6 +1,6 @@
 package com.codejunior.rickandmorty.di
 
-import com.codejunior.rickandmorty.retrofit.network.ICharacterAPI
+import com.codejunior.rickandmorty.domain.retrofit.network.ICharacterAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

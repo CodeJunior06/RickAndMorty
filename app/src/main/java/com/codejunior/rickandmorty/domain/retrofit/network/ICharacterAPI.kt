@@ -1,6 +1,6 @@
-package com.codejunior.rickandmorty.retrofit.network
+package com.codejunior.rickandmorty.domain.retrofit.network
 
-import com.codejunior.rickandmorty.retrofit.CharacterResponse
+import com.codejunior.rickandmorty.domain.retrofit.model.CharacterResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

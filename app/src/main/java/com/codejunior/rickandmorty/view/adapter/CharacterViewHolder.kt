@@ -1,10 +1,10 @@
-package com.codejunior.rickandmorty
+package com.codejunior.rickandmorty.view.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.databinding.ItemCharacterBinding
-import com.codejunior.rickandmorty.retrofit.Character
+import com.codejunior.rickandmorty.domain.retrofit.model.Character
 
 class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

@@ -1,11 +1,10 @@
-package com.codejunior.rickandmorty
+package com.codejunior.rickandmorty.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.codejunior.rickandmorty.retrofit.Character
-import com.codejunior.rickandmorty.retrofit.CharacterResponse
+import com.codejunior.rickandmorty.R
+import com.codejunior.rickandmorty.domain.retrofit.model.Character
 
 class CharacterAdapter(
     private val listCharacter: List<Character>,

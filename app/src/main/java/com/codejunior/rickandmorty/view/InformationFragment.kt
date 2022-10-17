@@ -1,60 +1,76 @@
 package com.codejunior.rickandmorty.view
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.R
+import com.codejunior.rickandmorty.databinding.FragmentInformationBinding
+import com.codejunior.rickandmorty.domain.retrofit.model.Character
+import com.codejunior.rickandmorty.view.adapter.EpisodeAdapter
+import com.codejunior.rickandmorty.viewmodel.InformationViewModel
+import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.ALIVE
+import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.DEAD
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Singleton
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [InformationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
+@Singleton
 class InformationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
+    private lateinit var bindingInformation: FragmentInformationBinding
+    private  var bundleCharacter:Character?= null
+
+    private val viewModelInformation:InformationViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+        bundleCharacter = this.arguments?.getParcelable("character")
 
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_information, container, false)
+    ): View {
+        bindingInformation = FragmentInformationBinding.inflate(inflater, container, false)
+        Glide.with(this).load(bundleCharacter!!.image).into(bindingInformation.imgCharacter)
+        return bindingInformation.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment InformationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            InformationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModelInformation.setStatus(bundleCharacter!!.status)
+        usingView()
+        bindingInformation.recyclerView.layoutManager = GridLayoutManager(context,2)
+        bindingInformation.recyclerView.adapter = EpisodeAdapter(bundleCharacter!!.episode)
+
+        viewModelInformation.statusPending.observe(viewLifecycleOwner){
+            when(it){
+                ALIVE-> {
+                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.green_status))
+                }
+                DEAD -> {
+                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_status))
+                }
+                else ->  {
+                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.unknown_status))
                 }
             }
+        }
+    }
+
+    private fun usingView() {
+        bindingInformation.characterName.text = bundleCharacter!!.name
+        bindingInformation.characterOrigin.text = bundleCharacter!!.origin.name
+        bindingInformation.characterLocation.text = bundleCharacter!!.location.name
+        bindingInformation.characterGender.text = bundleCharacter!!.gender
+        bindingInformation.characterSpecie.text = bundleCharacter!!.species
+        bindingInformation.characterStatus.text = bundleCharacter!!.status.uppercase()
     }
 }

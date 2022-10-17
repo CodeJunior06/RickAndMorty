@@ -1,8 +1,8 @@
-package com.codejunior.rickandmorty.retrofit
+package com.codejunior.rickandmorty.domain.retrofit.model
 
 import com.google.gson.annotations.SerializedName
 
 data class CharacterResponse(
     @SerializedName("info") val info: InfoPage,
-    @SerializedName("results") val results: ArrayList<Character>
+    @SerializedName("results") var results: ArrayList<Character>
 )
