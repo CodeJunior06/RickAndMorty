@@ -7,6 +7,8 @@ import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 
 @Dao
 interface CharacterDao {
+
     @Insert(entity = CharacterEntity::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDevice(entity: CharacterEntity)
+
 }

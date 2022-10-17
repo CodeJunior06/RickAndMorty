@@ -1,11 +1,11 @@
-package com.codejunior.rickandmorty.domain.retrofit.model
+package com.codejunior.rickandmorty.domain.retrofit.model.character
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Origin(
+data class Location(
     @SerializedName("name")  val name: String,
     @SerializedName("url")  val url: String,
 ): Parcelable

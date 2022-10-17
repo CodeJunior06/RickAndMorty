@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.databinding.ItemCharacterBinding
-import com.codejunior.rickandmorty.domain.retrofit.model.Character
+import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 
 class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

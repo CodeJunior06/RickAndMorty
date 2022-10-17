@@ -8,5 +8,5 @@ import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 @Database(entities = [CharacterEntity::class],version = 1,exportSchema = false)
 abstract class DataBaseRoom: RoomDatabase() {
 
-    abstract fun instanceDeviceDAO() : CharacterDao
+    abstract fun initDataBaseDAO() : CharacterDao
 }

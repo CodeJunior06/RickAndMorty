@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.R
 import com.codejunior.rickandmorty.databinding.FragmentInformationBinding
-import com.codejunior.rickandmorty.domain.retrofit.model.Character
+import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.view.adapter.EpisodeAdapter
 import com.codejunior.rickandmorty.viewmodel.InformationViewModel
 import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.ALIVE
 import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.DEAD
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 
@@ -26,7 +29,7 @@ import javax.inject.Singleton
 class InformationFragment : Fragment() {
 
     private lateinit var bindingInformation: FragmentInformationBinding
-    private  var bundleCharacter:Character?= null
+    private  var bundleCharacter: Character?= null
 
     private val viewModelInformation:InformationViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +50,10 @@ class InformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModelInformation.setStatus(bundleCharacter!!.status)
         usingView()
+        CoroutineScope(Dispatchers.Unconfined).launch{
+            viewModelInformation.initConsumerEpisode(bundleCharacter!!.episode)
+        }
+
         bindingInformation.recyclerView.layoutManager = GridLayoutManager(context,2)
         bindingInformation.recyclerView.adapter = EpisodeAdapter(bundleCharacter!!.episode)
 

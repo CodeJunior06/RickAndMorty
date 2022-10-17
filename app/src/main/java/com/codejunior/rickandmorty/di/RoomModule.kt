@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RoomModule {
-    private const val NAME_DATA_BASE = "rick_morty_database"
+    private const val NAME_DATA_BASE = "rick"
 
 
     @Singleton
@@ -25,7 +25,7 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun provideCharacterDAO(dataBase: DataBaseRoom) = dataBase.instanceDeviceDAO()
+    fun provideCharacterDAO(dataBase: DataBaseRoom) = dataBase.initDataBaseDAO()
 
 }
 

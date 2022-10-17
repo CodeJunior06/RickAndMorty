@@ -15,7 +15,7 @@
         </action>
         <argument
             android:name="character"
-            app:argType="com.codejunior.rickandmorty.domain.retrofit.model.Character" />
+            app:argType="com.codejunior.rickandmorty.domain.retrofit.model.character.Character" />
 
     </fragment>
     <fragment

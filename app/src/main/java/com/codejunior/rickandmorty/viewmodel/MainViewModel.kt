@@ -2,8 +2,10 @@ package com.codejunior.rickandmorty.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.model.MainModel
-import com.codejunior.rickandmorty.domain.retrofit.model.CharacterResponse
+import com.codejunior.rickandmorty.domain.retrofit.model.character.CharacterResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -72,6 +74,19 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }
 
         pageChange.value  = response - 1
+    }
+
+      suspend fun insertDataBase(character: List<Character>){
+         runCatching {
+             viewModelScope.launch { mainModel.initInsert(character) }
+         } .onSuccess {
+             it.join()
+             println("1")
+         }.onFailure {
+             println(it.cause!!.message)
+             println("0")
+         }
+
     }
 
 }
