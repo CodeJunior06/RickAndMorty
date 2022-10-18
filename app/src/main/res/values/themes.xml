@@ -15,8 +15,30 @@
     </style>
 
     <style name="Theme.RickAndMortyNoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/color</item>
+    </style>
+
+    <style name="Theme.background" parent="">
+        <item name="windowActionBar">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="cornerFamily">rounded</item>
+
+    </style>
+
+    <style name="Theme.title.information" parent="">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAlignment">center</item>
+
+    </style>
+    <style name="Theme.title.informationText" parent="">
+        <item name="android:textColor">#322B28</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAlignment">center</item>
+
     </style>
 </resources>

@@ -11,4 +11,6 @@
     <color name="green_status">#61FF1E</color>
     <color name="red_status">#FF1313</color>
     <color name="unknown_status">#3E332E</color>
+
+    <color name="toolbar">#C2B8B8</color>
 </resources>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.R
@@ -18,8 +19,6 @@ import com.codejunior.rickandmorty.viewmodel.InformationViewModel
 import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.ALIVE
 import com.codejunior.rickandmorty.viewmodel.InformationViewModel.Companion.DEAD
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
@@ -55,8 +54,11 @@ class InformationFragment : Fragment() {
         viewModelInformation.initConsumerEpisode(bundleCharacter!!.episode)
 
         viewModelInformation.listEpisode.observe(viewLifecycleOwner) {
-            bindingInformation.recyclerView.layoutManager = GridLayoutManager(context, 2)
-            bindingInformation.recyclerView.adapter = EpisodeAdapter(it)
+            lifecycleScope.launchWhenResumed {
+                bindingInformation.recyclerView.layoutManager = GridLayoutManager(context, 2)
+                bindingInformation.recyclerView.adapter = EpisodeAdapter(it)
+            }
+
         }
 
         viewModelInformation.statusPending.observe(viewLifecycleOwner) {

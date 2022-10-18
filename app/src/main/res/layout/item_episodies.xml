@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:padding="10dp"
     android:orientation="vertical">
 
     <View
@@ -10,48 +12,63 @@
         android:layout_width="wrap_content"
         android:layout_height="5dp"/>
     <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="50dp"
-        android:elevation="50dp"
-        android:backgroundTint="#B4E6E0"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:cardCornerRadius="35dp"
+        android:elevation="20dp"
+        android:backgroundTint="@color/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:padding="30dp">
+            android:padding="15dp">
 
-
-            <TextView
-                android:id="@+id/mameEpisode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="NAME EPISODE"
-                android:textAlignment="center"
-                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/episode"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:text="EPISODE"
+                android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="18sp" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/mameEpisode"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="NAME EPISODE"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toTopOf="@+id/presentEpisode"
+                app:layout_constraintEnd_toEndOf="@+id/episode"
+                app:layout_constraintStart_toStartOf="@+id/episode"
+                app:layout_constraintTop_toBottomOf="@+id/episode" />
 
             <TextView
                 android:id="@+id/presentEpisode"
-                android:layout_width="match_parent"
+                android:layout_width="362dp"
                 android:layout_height="wrap_content"
                 android:text="PRESENT EPISODE"
                 android:textAlignment="center"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:textSize="13sp"
+                android:textColor="@color/unknown_status"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/mameEpisode"
+                app:layout_constraintStart_toStartOf="@+id/mameEpisode" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.cardview.widget.CardView>

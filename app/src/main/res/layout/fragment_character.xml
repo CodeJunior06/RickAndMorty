@@ -8,54 +8,34 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <include
             android:id="@+id/include"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:layout_below="@id/include"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/pageChange"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:textColor="@color/red_status"
-                    android:text="1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text=" DE 42 PAGE"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCharacter"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
 
         </LinearLayout>

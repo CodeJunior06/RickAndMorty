@@ -43,7 +43,6 @@ class CharacterFragment : Fragment() {
             when (viewModel.getStringToInt(it.info.next)) {
                 2 -> {
                     bindingMain.include.linearPrevResponse.visibility = View.GONE
-                    bindingMain.include.linearTitle.visibility = View.VISIBLE
                 }
                 -1 -> {
                     bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
@@ -85,7 +84,7 @@ class CharacterFragment : Fragment() {
         }
 
         viewModel.pageChange.observe(viewLifecycleOwner) {
-            bindingMain.pageChange.text = it!!.toString()
+            bindingMain.include.pageChange.text = it!!.toString()
         }
         CoroutineScope(Dispatchers.IO).launch {
            val r = viewModel.getCharacter2().await()

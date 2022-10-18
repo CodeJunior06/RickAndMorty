@@ -9,23 +9,23 @@ import java.lang.Exception
 import javax.inject.Inject
 
 
-class InformationModel @Inject constructor(private val  retrofit: ICharacterAPI){
+class InformationModel @Inject constructor(private val retrofit: ICharacterAPI) {
 
-    suspend fun getEpisodeApi(url:String): Episode{
-        return withContext(Dispatchers.IO){
-                val curMageia = getEpisode(url)
-                val response = retrofit.getEpisode(curMageia)
-                response.body()!!
-            }
-         }
-    }
-
-    private fun getEpisode(i:String): Int {
-        try {
-          return  i.substring(i.length-2,i.length).toInt()
-        }catch (e:Exception){
-            e.printStackTrace()
+    suspend fun getEpisodeApi(url: String): Episode {
+        return withContext(Dispatchers.IO) {
+            val curMageia = getEpisode(url)
+            val response = retrofit.getEpisode(curMageia)
+            response.body()!!
         }
-        return  i.substring(i.length-1,i.length).toInt()
-
     }
+}
+
+private fun getEpisode(i: String): Int {
+
+    if (i.substring(i.length - 2, i.length).contains("/")) {
+        return i.substring(i.length - 1, i.length).toInt()
+    }
+    return i.substring(i.length - 2, i.length).toInt()
+
+
+}
