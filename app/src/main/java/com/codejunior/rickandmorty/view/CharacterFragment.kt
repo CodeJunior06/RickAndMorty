@@ -42,20 +42,6 @@ class CharacterFragment : Fragment() {
         viewModel.initConsumer()
 
         viewModel.listCharacter.observe(viewLifecycleOwner) {
-            when (viewModel.getStringToInt(it.info.next)) {
-                2 -> {
-                    bindingMain.include.linearPrevResponse.visibility = View.GONE
-                }
-                -1 -> {
-                    bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
-                    bindingMain.include.linearAfterResponse.visibility = View.GONE
-                }
-                else -> {
-                    bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
-                    bindingMain.include.linearAfterResponse.visibility = View.VISIBLE
-                }
-
-            }
             viewModel.getPage(it.info.next)
 
             bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -115,7 +101,22 @@ class CharacterFragment : Fragment() {
         }
 
         viewModel.pageChange.observe(viewLifecycleOwner) {
+            when (it) {
+                1 -> {
+                    bindingMain.include.linearPrevResponse.visibility = View.GONE
+                    bindingMain.include.linearAfterResponse.visibility = View.VISIBLE
+                }
+                42 -> {
+                    bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
+                    bindingMain.include.linearAfterResponse.visibility = View.GONE
+                }
+                else -> {
+                    bindingMain.include.linearPrevResponse.visibility = View.VISIBLE
+                    bindingMain.include.linearAfterResponse.visibility = View.VISIBLE
+                }
+            }
             bindingMain.include.pageChange.text = it!!.toString()
+
         }
 
         viewModel.listCharacterNotConnection.observe(viewLifecycleOwner) {
@@ -133,12 +134,12 @@ class CharacterFragment : Fragment() {
             bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
         }
 
-/*        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val r = viewModel.getCharacterDataBase().await()
             r.listIterator().forEach {
                 println("GET: " + it.name + " " + it.id)
             }
-        }*/
+        }
     }
 
 }

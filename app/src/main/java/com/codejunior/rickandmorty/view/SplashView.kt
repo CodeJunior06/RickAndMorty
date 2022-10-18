@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.codejunior.rickandmorty.databinding.ActivitySplashBinding
+import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -18,33 +19,44 @@ class SplashView : AppCompatActivity() {
     private val bindingSplash get() = _binding
     private lateinit var context: Context
     private val viewModelMain: MainViewModel by viewModels()
-
+    private lateinit var jb: Job
+    private lateinit var s: List<Character>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(bindingSplash.root)
         context = this
 
-        if(!viewModelMain.utils.getServiceInternet()){
+        if (!viewModelMain.utils.getServiceInternet()) {
             lifecycleScope.launch(Dispatchers.Main) {
-                startTimer()
+                delay(2000)
+                getIntentMain()
             }
             return
         }
 
-        viewModelMain.initConsumer()
+        lifecycleScope.launch(Dispatchers.Default) {
 
-        viewModelMain.listCharacter.observe(this@SplashView) {
-            lifecycleScope.launch { viewModelMain.insertDataBase(it.results) }
-        }
-
-       lifecycleScope.launch(Dispatchers.IO) {
-            async { viewModelMain.cicloConsumerAll() }.join()
+            viewModelMain.initConsumer()
+            viewModelMain.cicloConsumerAll()
+            delay(3000)
+            getIntentMain()
         }
 
         lifecycleScope.launch(Dispatchers.Main) {
-           startTimer()
+            viewModelMain.listCharacter.observe(this@SplashView) {
+                viewModelMain.insertDataBase(it.results)
+            }
+        }
 
+    }
+
+    private fun getIntentMain() {
+        lifecycleScope.launchWhenCreated {
+
+            val i = Intent(context, MainView::class.java)
+            startActivity(i)
+            finish()
         }
     }
 

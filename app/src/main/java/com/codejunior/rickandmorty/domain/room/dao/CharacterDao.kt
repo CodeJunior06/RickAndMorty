@@ -17,4 +17,7 @@ interface CharacterDao {
 
     @Query("SELECT * FROM character WHERE cha_id BETWEEN :number-19 and :number")
     suspend fun getCharacterForPage(number:Int) : List<CharacterEntity>
+
+    @Query("SELECT * FROM character")
+    suspend fun getCharacterAll() : List<CharacterEntity>
 }

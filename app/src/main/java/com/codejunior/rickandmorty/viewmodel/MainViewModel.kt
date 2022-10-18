@@ -30,14 +30,14 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                 response = mainModel.getResponse()
             }
         }.onSuccess {
-            listCharacter.value = response!!
+            listCharacter.postValue(response!!)
             return
         }.onFailure {
             response
         }
 
         if (response == null) {
-            toastMessage.value = "CONEXION NO ESTABLECIDA"
+            toastMessage.postValue("CONEXION NO ESTABLECIDA")
             return
         }
 
@@ -80,8 +80,8 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }
 
     }
-
-    fun cicloConsumerAll() {
+    private var provicionalList = ArrayList<Character>()
+    fun cicloConsumerAll()  {
 
         viewModelScope.launch {
             for (i in 1..42) {
@@ -89,10 +89,9 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                 listCharacter.value = response!!
             }
         }
-
     }
 
-    fun getStringToInt(nextOrPrev: String?): Int {
+    private fun getStringToInt(nextOrPrev: String?): Int {
         if (nextOrPrev == null) {
             return -1
         }
@@ -112,13 +111,10 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
     fun insertDataBase(character: List<Character>) {
 
-        runCatching {
-            viewModelScope.launch {
-                for (i in character) {
-                    mainModel.initInsert(i)
-                }
+        viewModelScope.launch(Dispatchers.Unconfined) {
+            for (i in character) {
+                mainModel.initInsert(i)
             }
-
         }
 
     }
@@ -127,6 +123,12 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
         return viewModelScope.async {
             mainModel.getCharacterLimit()
+        }
+    }
+
+    fun getCharacterDataBase(): Deferred<List<CharacterEntity>> {
+        return viewModelScope.async {
+            mainModel.getCharacterAll()
         }
     }
 }
