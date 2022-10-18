@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.codejunior.rickandmorty.R
 import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
+import com.codejunior.rickandmorty.model.IBaseModel
 
 class CharacterAdapter(
-    private val listCharacter: List<Character>,
-    private val onClickListener: (Character) -> Unit
+    private val listCharacter: List<IBaseModel>,
+    private val onClickListener: (IBaseModel) -> Unit
 ) : RecyclerView.Adapter<CharacterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

@@ -8,6 +8,7 @@
     android:background="@drawable/corner_bottom"
     android:padding="10dp"
     style="@style/Theme.background"
+    android:windowContentOverlay="@null"
     tools:context=".view.MainView">
 
 

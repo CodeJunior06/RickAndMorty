@@ -25,7 +25,7 @@ class SplashView : AppCompatActivity() {
         setContentView(bindingSplash.root)
         context = this
 
-        if(!viewModelMain.utils.getServiceInternet(this)){
+        if(!viewModelMain.utils.getServiceInternet()){
             lifecycleScope.launch(Dispatchers.Main) {
                 startTimer()
             }
@@ -40,20 +40,16 @@ class SplashView : AppCompatActivity() {
 
        lifecycleScope.launch(Dispatchers.IO) {
             async { viewModelMain.cicloConsumerAll() }.join()
-            launch { viewModelMain.getCharacter().await() }
         }
 
         lifecycleScope.launch(Dispatchers.Main) {
-            delay(1800)
-            val i = Intent(context, MainView::class.java)
-            startActivity(i)
-            finish()
+           startTimer()
 
         }
     }
 
     private fun startTimer() {
-        object : CountDownTimer(1780, 1500) {
+        object : CountDownTimer(3000, 1500) {
             override fun onTick(p0: Long) {
                 println("Timer Splash $p0")
             }

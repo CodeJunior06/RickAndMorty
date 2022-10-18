@@ -36,10 +36,15 @@ class MainModel @Inject constructor(
         }
     }
 
-    suspend fun get() : List<CharacterEntity>{
+    suspend fun getCharacterLimit() : List<CharacterEntity>{
 
         return withContext(Dispatchers.IO) {
             room.initDataBaseDAO().getCharacter()
+        }
+    }
+    suspend fun getCharacterForPage(page:Int) : List<CharacterEntity>{
+        return withContext(Dispatchers.IO) {
+            room.initDataBaseDAO().getCharacterForPage( page * 20)
         }
     }
 

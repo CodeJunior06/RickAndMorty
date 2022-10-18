@@ -24,7 +24,7 @@
     <style name="Theme.background" parent="">
         <item name="windowActionBar">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="cornerFamily">rounded</item>
+        <item name="android:windowContentOverlay">@null</item>
 
     </style>
 

@@ -1,6 +1,7 @@
 package com.codejunior.rickandmorty.domain.retrofit.model.character
 
 import android.os.Parcelable
+import com.codejunior.rickandmorty.model.IBaseModel
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -18,4 +19,4 @@ data class Character(
     @SerializedName("image")  val image: String,
     @SerializedName("url")  val url: String,
     @SerializedName("created")  val created: String,
-) : Parcelable
+) : Parcelable,IBaseModel

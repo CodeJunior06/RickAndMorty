@@ -1,10 +1,14 @@
 package com.codejunior.rickandmorty.domain.room.entities
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
+import com.codejunior.rickandmorty.model.IBaseModel
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "character")
 data class CharacterEntity(
     @PrimaryKey(autoGenerate = false) @ColumnInfo(name = "cha_id") val id: Int,
@@ -19,7 +23,7 @@ data class CharacterEntity(
     @ColumnInfo(name = "cha_image") val image: String,
     @ColumnInfo(name = "cha_url") val url: String,
     @ColumnInfo(name = "cha_created") val created: String,
-)
+) : IBaseModel, Parcelable
 
 fun Character.render(character: Character) = CharacterEntity(
     character.id,

@@ -12,7 +12,9 @@ interface CharacterDao {
     @Insert(entity = CharacterEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDevice(entity: CharacterEntity)
 
-    @Query("SELECT * FROM character")
+    @Query("SELECT * FROM character LIMIT 20")
     suspend fun getCharacter() : List<CharacterEntity>
 
+    @Query("SELECT * FROM character WHERE cha_id BETWEEN :number-19 and :number")
+    suspend fun getCharacterForPage(number:Int) : List<CharacterEntity>
 }

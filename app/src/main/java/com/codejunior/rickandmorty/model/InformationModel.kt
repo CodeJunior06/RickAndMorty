@@ -5,7 +5,6 @@ import com.codejunior.rickandmorty.domain.retrofit.model.episode.Episode
 import com.codejunior.rickandmorty.domain.retrofit.network.ICharacterAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import javax.inject.Inject
 
 

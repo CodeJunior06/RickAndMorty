@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.codejunior.rickandmorty.R
 import com.codejunior.rickandmorty.view.adapter.CharacterAdapter
 import com.codejunior.rickandmorty.databinding.FragmentCharacterBinding
+import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
+import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 import com.codejunior.rickandmorty.extension.toastMessage
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +61,7 @@ class CharacterFragment : Fragment() {
             bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
             bindingMain.recyclerCharacter.adapter =
                 CharacterAdapter(it!!.results) { model ->
+                    model as Character
                     toastMessage(model.name)
                     this.arguments?.putParcelable("character", model)
                     findNavController().navigate(
@@ -70,28 +73,72 @@ class CharacterFragment : Fragment() {
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) {
-            if (it.equals("ERROR RESPONSE")) {
-                toastMessage(it.toString())
+
+            toastMessage(it.toString())
+            lifecycleScope.launch(Dispatchers.Main) {
+                val response = viewModel.getCharacterDataBaseLimit().await()
+                bindingMain.include.pageChange.text = 1.toString()
+                if (bindingMain.include.pageChange.text == "1") {
+                    bindingMain.include.linearPrevResponse.visibility = View.GONE
+                }
+                bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
+                bindingMain.recyclerCharacter.adapter =
+                    CharacterAdapter(response) { model ->
+                        model as CharacterEntity
+                        toastMessage(model.name)
+                        arguments?.putParcelable("character", model)
+                        findNavController().navigate(
+                            R.id.action_characterFragment_to_informationFragment,
+                            arguments
+                        )
+                    }
+                bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
             }
         }
 
         bindingMain.include.afterResponse.setOnClickListener {
-            viewModel.cicloConsumer(true)
+            if (!viewModel.utils.getServiceInternet()) {
+                viewModel.cicloConsumer(true, bindingMain.include.pageChange.text.toString())
+            } else {
+                viewModel.cicloConsumer(true)
+            }
         }
 
         bindingMain.include.prevResponse.setOnClickListener {
-            viewModel.cicloConsumer(false)
+            if (!viewModel.utils.getServiceInternet()) {
+                viewModel.cicloConsumer(false, bindingMain.include.pageChange.text.toString())
+
+            } else {
+                viewModel.cicloConsumer(false)
+            }
+
         }
 
         viewModel.pageChange.observe(viewLifecycleOwner) {
             bindingMain.include.pageChange.text = it!!.toString()
         }
-        CoroutineScope(Dispatchers.IO).launch {
-           val r = viewModel.getCharacter2().await()
-            r.listIterator().forEach {
-                println("GET: "+ it.name + " " + it.id)
-            }
+
+        viewModel.listCharacterNotConnection.observe(viewLifecycleOwner) {
+            bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
+            bindingMain.recyclerCharacter.adapter =
+                CharacterAdapter(it) { model ->
+                    model as CharacterEntity
+                    toastMessage(model.name)
+                    arguments?.putParcelable("character", model)
+                    findNavController().navigate(
+                        R.id.action_characterFragment_to_informationFragment,
+                        arguments
+                    )
+                }
+            bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
         }
+
+/*        CoroutineScope(Dispatchers.IO).launch {
+            val r = viewModel.getCharacterDataBase().await()
+            r.listIterator().forEach {
+                println("GET: " + it.name + " " + it.id)
+            }
+        }*/
     }
 
 }

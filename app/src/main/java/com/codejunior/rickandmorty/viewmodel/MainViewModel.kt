@@ -16,9 +16,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val mainModel: MainModel) : ViewModel() {
 
     val listCharacter = MutableLiveData<CharacterResponse>()
+    var listCharacterNotConnection = MutableLiveData<List<CharacterEntity>>()
     val toastMessage = MutableLiveData<String>()
     val pageChange = MutableLiveData<Int>()
     private var response: CharacterResponse? = null
+
     @Inject
     lateinit var utils: Utils
 
@@ -35,30 +37,47 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }
 
         if (response == null) {
-            toastMessage.value = "ERROR RESPONSE"
+            toastMessage.value = "CONEXION NO ESTABLECIDA"
             return
         }
 
     }
 
     fun cicloConsumer(next: Boolean) {
+        runCatching {
+            runBlocking {
+                if (next) {
+                    response = mainModel.getResponseDinamic(getStringToInt(response!!.info.next))
+                } else {
+                    response = mainModel.getResponseDinamic(getStringToInt(response!!.info.prev))
+                }
 
-        runBlocking {
-            if (next) {
-                response = mainModel.getResponseDinamic(getStringToInt(response!!.info.next))
-            } else {
-                response = mainModel.getResponseDinamic(getStringToInt(response!!.info.prev))
             }
-
-        }
-
-        if (response == null) {
-            toastMessage.value = "ERROR RESPONSE"
+        }.onSuccess {
+            listCharacter.value = response!!
             return
+        }.onFailure {
+            if (response == null) {
+                toastMessage.value = "ERROR RESPONSE"
+                return
+            }
         }
 
-        listCharacter.value = response!!
-        return
+    }
+
+    fun cicloConsumer(next: Boolean, pageCurrent: String) {
+        viewModelScope.launch {
+
+            listCharacterNotConnection.value = if (next) {
+                val newCurrentPage = pageCurrent.toInt() + 1
+                pageChange.value = newCurrentPage
+                mainModel.getCharacterForPage(newCurrentPage)
+            } else {
+                val oldCurrentPage = pageCurrent.toInt() - 1
+                pageChange.value = oldCurrentPage
+                mainModel.getCharacterForPage(oldCurrentPage)
+            }
+        }
 
     }
 
@@ -104,21 +123,12 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
     }
 
-    fun getCharacter(): Deferred<Unit> {
+    fun getCharacterDataBaseLimit(): Deferred<List<CharacterEntity>> {
 
         return viewModelScope.async {
-            mainModel.get().listIterator().forEach {
-                println("GET TABLE CHARACTER : " + it.name + " " + it.id)
-            }
+            mainModel.getCharacterLimit()
         }
     }
-
-    fun getCharacter2(): Deferred<List<CharacterEntity>> {
-
-        return viewModelScope.async {
-            mainModel.get()
-        }
-    }
-
 }
+
 
