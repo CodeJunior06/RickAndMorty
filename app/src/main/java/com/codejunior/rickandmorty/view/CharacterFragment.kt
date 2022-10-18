@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codejunior.rickandmorty.R
@@ -15,6 +16,7 @@ import com.codejunior.rickandmorty.databinding.FragmentCharacterBinding
 import com.codejunior.rickandmorty.extension.toastMessage
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class CharacterFragment : Fragment() {
@@ -57,10 +59,13 @@ class CharacterFragment : Fragment() {
 
             bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
             bindingMain.recyclerCharacter.adapter =
-                CharacterAdapter(it!!.results ) { model ->
+                CharacterAdapter(it!!.results) { model ->
                     toastMessage(model.name)
-                    this.arguments?.putParcelable("character",model)
-                    findNavController().navigate(R.id.action_characterFragment_to_informationFragment,arguments)
+                    this.arguments?.putParcelable("character", model)
+                    findNavController().navigate(
+                        R.id.action_characterFragment_to_informationFragment,
+                        arguments
+                    )
                 }
             bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
         }
@@ -79,10 +84,16 @@ class CharacterFragment : Fragment() {
             viewModel.cicloConsumer(false)
         }
 
-        viewModel.pageChange.observe(viewLifecycleOwner){
+        viewModel.pageChange.observe(viewLifecycleOwner) {
             bindingMain.pageChange.text = it!!.toString()
         }
-
+        CoroutineScope(Dispatchers.IO).launch {
+           val r = viewModel.getCharacter2().await()
+            r.listIterator().forEach {
+                println("GET: "+ it.name + " " + it.id)
+            }
+        }
     }
 
 }
+

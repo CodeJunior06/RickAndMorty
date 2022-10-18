@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.model.MainModel
 import com.codejunior.rickandmorty.domain.retrofit.model.character.CharacterResponse
+import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
+import com.codejunior.rickandmorty.view.utilities.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -17,6 +19,8 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     val toastMessage = MutableLiveData<String>()
     val pageChange = MutableLiveData<Int>()
     private var response: CharacterResponse? = null
+    @Inject
+    lateinit var utils: Utils
 
     fun initConsumer() {
         runCatching {
@@ -58,35 +62,63 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
     }
 
+    fun cicloConsumerAll() {
+
+        viewModelScope.launch {
+            for (i in 1..42) {
+                response = mainModel.getResponseDinamic(getStringToInt(response!!.info.next))
+                listCharacter.value = response!!
+            }
+        }
+
+    }
+
     fun getStringToInt(nextOrPrev: String?): Int {
-        if(nextOrPrev ==null){
+        if (nextOrPrev == null) {
             return -1
         }
         val list = nextOrPrev.split("=")
         return list[1].toInt()
     }
 
-    fun getPage(page:String?) {
+    fun getPage(page: String?) {
         val response = getStringToInt(page)
         if (response == -1) {
             pageChange.value = 42
             return
         }
 
-        pageChange.value  = response - 1
+        pageChange.value = response - 1
     }
 
-      suspend fun insertDataBase(character: List<Character>){
-         runCatching {
-             viewModelScope.launch { mainModel.initInsert(character) }
-         } .onSuccess {
-             it.join()
-             println("1")
-         }.onFailure {
-             println(it.cause!!.message)
-             println("0")
-         }
+    fun insertDataBase(character: List<Character>) {
 
+        runCatching {
+            viewModelScope.launch {
+                for (i in character) {
+                    mainModel.initInsert(i)
+                }
+            }
+
+        }
+
+    }
+
+    fun getCharacter(): Deferred<Unit> {
+
+        return viewModelScope.async {
+            mainModel.get().listIterator().forEach {
+                println("GET TABLE CHARACTER : " + it.name + " " + it.id)
+            }
+        }
+    }
+
+    fun getCharacter2(): Deferred<List<CharacterEntity>> {
+
+        return viewModelScope.async {
+            mainModel.get()
+        }
     }
 
 }
+

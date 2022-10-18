@@ -7,7 +7,6 @@ import com.codejunior.rickandmorty.domain.retrofit.model.episode.Episode
 import com.codejunior.rickandmorty.model.InformationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,22 +18,24 @@ class InformationViewModel @Inject constructor(private val informationModel: Inf
         const val DEAD: String = "Dead"
     }
 
+    private var rta: String? = null
     val statusPending = MutableLiveData<String>()
     val listEpisode = MutableLiveData<List<Episode>>()
-    private var response: List<Episode>? = null
+    private  var response =  ArrayList<Episode>()
 
-    suspend fun initConsumerEpisode(lst: List<String>) {
+    fun initConsumerEpisode(lst: List<String>) {
+        response.clear()
         runCatching {
-          val rta =  viewModelScope.async {
-                return@async informationModel.getEpisodeApi(lst as ArrayList)
+            viewModelScope.async {
+                for (listModel in lst){ response.add(informationModel.getEpisodeApi(listModel))
+                   listEpisode.value = response
+                }
             }
-            response = rta.await()
         }.onSuccess {
-            listEpisode.value = response
             return
         }.onFailure {
-            println("ON FAILURE "+ it.message)
-            response = null
+            println("ON FAILURE " + it.message)
+            response = emptyList<Episode>() as ArrayList
         }
     }
 

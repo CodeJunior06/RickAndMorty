@@ -7,7 +7,6 @@ import com.codejunior.rickandmorty.domain.room.DataBaseRoom
 import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 import com.codejunior.rickandmorty.domain.room.entities.render
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -30,10 +29,17 @@ class MainModel @Inject constructor(
         }
     }
 
-    suspend fun initInsert(character: List<Character>) {
+    suspend fun initInsert(character: Character) {
 
         withContext(Dispatchers.IO) {
-            room.initDataBaseDAO().insertDevice(CharacterEntity(1, "", "", "", "", "", "", "", 20,"","",""))
+            room.initDataBaseDAO().insertDevice(character.render(character))
+        }
+    }
+
+    suspend fun get() : List<CharacterEntity>{
+
+        return withContext(Dispatchers.IO) {
+            room.initDataBaseDAO().getCharacter()
         }
     }
 

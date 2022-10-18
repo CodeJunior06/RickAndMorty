@@ -29,14 +29,15 @@ import javax.inject.Singleton
 class InformationFragment : Fragment() {
 
     private lateinit var bindingInformation: FragmentInformationBinding
-    private  var bundleCharacter: Character?= null
+    private var bundleCharacter: Character? = null
 
-    private val viewModelInformation:InformationViewModel by activityViewModels()
+    private val viewModelInformation: InformationViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bundleCharacter = this.arguments?.getParcelable("character")
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,23 +51,39 @@ class InformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModelInformation.setStatus(bundleCharacter!!.status)
         usingView()
-        CoroutineScope(Dispatchers.Unconfined).launch{
-            viewModelInformation.initConsumerEpisode(bundleCharacter!!.episode)
+
+        viewModelInformation.initConsumerEpisode(bundleCharacter!!.episode)
+
+        viewModelInformation.listEpisode.observe(viewLifecycleOwner) {
+            bindingInformation.recyclerView.layoutManager = GridLayoutManager(context, 2)
+            bindingInformation.recyclerView.adapter = EpisodeAdapter(it)
         }
 
-        bindingInformation.recyclerView.layoutManager = GridLayoutManager(context,2)
-        bindingInformation.recyclerView.adapter = EpisodeAdapter(bundleCharacter!!.episode)
-
-        viewModelInformation.statusPending.observe(viewLifecycleOwner){
-            when(it){
-                ALIVE-> {
-                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.green_status))
+        viewModelInformation.statusPending.observe(viewLifecycleOwner) {
+            when (it) {
+                ALIVE -> {
+                    bindingInformation.characterStatus.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.green_status
+                        )
+                    )
                 }
                 DEAD -> {
-                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_status))
+                    bindingInformation.characterStatus.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.red_status
+                        )
+                    )
                 }
-                else ->  {
-                    bindingInformation.characterStatus.setTextColor(ContextCompat.getColor(requireContext(),R.color.unknown_status))
+                else -> {
+                    bindingInformation.characterStatus.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.unknown_status
+                        )
+                    )
                 }
             }
         }
