@@ -10,6 +10,7 @@ import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 import com.codejunior.rickandmorty.view.utilities.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.internal.synchronized
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,20 +26,33 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     lateinit var utils: Utils
 
     fun initConsumer() {
-        runCatching {
-            runBlocking {
-                response = mainModel.getResponse()
-            }
-        }.onSuccess {
-            listCharacter.postValue(response!!)
-            return
-        }.onFailure {
-            response
-        }
 
-        if (response == null) {
-            toastMessage.postValue("CONEXION NO ESTABLECIDA")
-            return
+        viewModelScope.launch {
+
+            var modelResponse = async { mainModel.getResponse() }
+
+            response = modelResponse.await()
+
+            if (response == null || response!!.results.isEmpty()) {
+                toastMessage.postValue("CONEXION NO ESTABLECIDA")
+                return@launch
+            }
+
+            listCharacter.value = response!!
+
+            do {
+
+                modelResponse =
+                    async { mainModel.getResponseDinamic(getStringToInt(response!!.info.next)) }
+
+                response = modelResponse.await()
+
+                if (response != null) {
+                    listCharacter.postValue(response!!)
+                }
+
+            } while (response != null)
+
         }
 
     }
@@ -56,6 +70,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }.onSuccess {
             listCharacter.value = response!!
             return
+
         }.onFailure {
             if (response == null) {
                 toastMessage.value = "ERROR RESPONSE"
@@ -80,8 +95,9 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }
 
     }
+
     private var provicionalList = ArrayList<Character>()
-    fun cicloConsumerAll()  {
+    fun cicloConsumerAll() {
 
         viewModelScope.launch {
             for (i in 1..42) {
@@ -109,14 +125,16 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         pageChange.value = response - 1
     }
 
+    private var increment: Int = 0
     fun insertDataBase(character: List<Character>) {
 
-        viewModelScope.launch(Dispatchers.Unconfined) {
+        viewModelScope.launch(Dispatchers.Default) {
             for (i in character) {
                 mainModel.initInsert(i)
+                println("Personage: $increment ${i.name}")
+                increment++
             }
         }
-
     }
 
     fun getCharacterDataBaseLimit(): Deferred<List<CharacterEntity>> {

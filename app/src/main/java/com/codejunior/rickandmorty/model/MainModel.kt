@@ -24,8 +24,12 @@ class MainModel @Inject constructor(
 
     suspend fun getResponseDinamic(page: Int): CharacterResponse? {
         return withContext(Dispatchers.IO) {
-            val response = retrofit.getCharacterPage(page)
-            response.body()
+            if (page == -1) {
+                null
+            } else {
+                val response = retrofit.getCharacterPage(page)
+                response.body()
+            }
         }
     }
 
