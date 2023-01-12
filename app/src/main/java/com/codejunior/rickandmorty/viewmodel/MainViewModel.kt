@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     @Inject
     lateinit var utils: Utils
 
-    fun initConsumer() {
+    fun initConsumer(consumerAll: Boolean) {
 
         viewModelScope.launch {
 
@@ -39,24 +39,25 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
             }
 
             listCharacter.value = response!!
+            if (consumerAll) {
+                do {
 
-            do {
+                    modelResponse =
+                        async { mainModel.getResponseDinamic(getStringToInt(response!!.info.next)) }
 
-                modelResponse =
-                    async { mainModel.getResponseDinamic(getStringToInt(response!!.info.next)) }
+                    response = modelResponse.await()
 
-                response = modelResponse.await()
+                    if (response != null) {
+                        listCharacter.postValue(response!!)
+                    }
 
-                if (response != null) {
-                    listCharacter.postValue(response!!)
-                }
-
-            } while (response != null)
-
+                } while (response != null)
+                toastMessage.postValue("Finish Request");
+            }
         }
-
     }
 
+    // Consiste en traer la respuesta por pagina si existe internet
     fun cicloConsumer(next: Boolean) {
         runCatching {
             runBlocking {
@@ -65,7 +66,6 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                 } else {
                     response = mainModel.getResponseDinamic(getStringToInt(response!!.info.prev))
                 }
-
             }
         }.onSuccess {
             listCharacter.value = response!!
@@ -73,7 +73,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
         }.onFailure {
             if (response == null) {
-                toastMessage.value = "ERROR RESPONSE"
+                toastMessage.value = "RESPONSE ERROR TO REQUEST"
                 return
             }
         }

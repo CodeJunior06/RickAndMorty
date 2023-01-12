@@ -39,7 +39,7 @@ class CharacterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.initConsumer()
+        viewModel.initConsumer(false)
 
         viewModel.listCharacter.observe(viewLifecycleOwner) {
             viewModel.getPage(it.info.next)
@@ -64,7 +64,7 @@ class CharacterFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.Main) {
                 val response = viewModel.getCharacterDataBaseLimit().await()
                 bindingMain.include.pageChange.text = 1.toString()
-                if (bindingMain.include.pageChange.text == "1") {
+                if (bindingMain.include.pageChange.text == 1.toString()) {
                     bindingMain.include.linearPrevResponse.visibility = View.GONE
                 }
                 bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
