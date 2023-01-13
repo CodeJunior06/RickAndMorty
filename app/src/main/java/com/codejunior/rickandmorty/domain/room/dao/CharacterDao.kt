@@ -20,4 +20,7 @@ interface CharacterDao {
 
     @Query("SELECT * FROM character")
     suspend fun getCharacterAll() : List<CharacterEntity>
+
+    @Query("SELECT COUNT(cha_id) FROM character")
+    suspend fun getCountCharacter() : Int
 }

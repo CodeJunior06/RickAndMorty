@@ -1,24 +1,21 @@
 package com.codejunior.rickandmorty.view
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.codejunior.rickandmorty.databinding.ActivitySplashBinding
-import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.extension.intentToMainView
+import com.codejunior.rickandmorty.view.dialog.InformationDialog
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET_AND_DB
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.SUCCESS
 import com.codejunior.rickandmorty.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlin.concurrent.thread
-import kotlin.time.measureTime
 
 @AndroidEntryPoint
-class SplashView : AppCompatActivity() {
+class SplashView : AppCompatActivity() , OnExit{
 
     private lateinit var _binding: ActivitySplashBinding
     private val bindingSplash get() = _binding
@@ -31,23 +28,31 @@ class SplashView : AppCompatActivity() {
         _binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(bindingSplash.root)
 
-        if (!viewModelMain.utils.getServiceInternet()) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                delay(2000)
-                intentToMainView()
-            }
-            return
-        }
+        viewModelMain.init();
 
-        viewModelMain.initConsumer(true)
-
-        viewModelMain.listCharacter.observe(this@SplashView) {
+       /* viewModelMain.listCharacter.observe(this@SplashView) {
             viewModelMain.insertDataBase(it.results)
-        }
+        }*/
 
         viewModelMain.toastMessage.observe(this@SplashView){
             Log.d("SPLASH",it)
-            intentToMainView()
+
+            when(it){
+                SUCCESS ->  intentToMainView()
+                ERROR_INTERNET ->  TODO("here implementation ")
+                ERROR_INTERNET_AND_DB -> {
+                    supportFragmentManager.beginTransaction().add(InformationDialog(this),"parent").commit()
+                }
+            }
+
         }
     }
+
+    override fun exitApplication() {
+        finish()
+    }
+
+}
+interface OnExit{
+    fun exitApplication()
 }

@@ -60,5 +60,11 @@ class MainModel @Inject constructor(
         }
     }
 
+    suspend fun getExistCharacter() : Int {
+        return withContext(Dispatchers.IO){
+            room.initDataBaseDAO().getCountCharacter()
+        }
+    }
+
 
 }

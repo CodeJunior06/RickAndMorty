@@ -84,18 +84,18 @@ class CharacterFragment : Fragment() {
 
         bindingMain.include.afterResponse.setOnClickListener {
             if (!viewModel.utils.getServiceInternet()) {
-                viewModel.cicloConsumer(true, bindingMain.include.pageChange.text.toString())
+                viewModel.cycleConsumer(true, bindingMain.include.pageChange.text.toString())
             } else {
-                viewModel.cicloConsumer(true)
+                viewModel.cycleConsumer(true)
             }
         }
 
         bindingMain.include.prevResponse.setOnClickListener {
             if (!viewModel.utils.getServiceInternet()) {
-                viewModel.cicloConsumer(false, bindingMain.include.pageChange.text.toString())
+                viewModel.cycleConsumer(false, bindingMain.include.pageChange.text.toString())
 
             } else {
-                viewModel.cicloConsumer(false)
+                viewModel.cycleConsumer(false)
             }
 
         }

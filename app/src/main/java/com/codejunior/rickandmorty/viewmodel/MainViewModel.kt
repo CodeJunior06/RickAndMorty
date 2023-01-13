@@ -7,10 +7,11 @@ import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.model.MainModel
 import com.codejunior.rickandmorty.domain.retrofit.model.character.CharacterResponse
 import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET_AND_DB
 import com.codejunior.rickandmorty.view.utilities.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.internal.synchronized
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,12 +19,14 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
     val listCharacter = MutableLiveData<CharacterResponse>()
     var listCharacterNotConnection = MutableLiveData<List<CharacterEntity>>()
+
     val toastMessage = MutableLiveData<String>()
+
     val pageChange = MutableLiveData<Int>()
-    private var response: CharacterResponse? = null
 
     @Inject
     lateinit var utils: Utils
+    private var response: CharacterResponse? = null
 
     fun initConsumer(consumerAll: Boolean) {
 
@@ -34,11 +37,13 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
             response = modelResponse.await()
 
             if (response == null || response!!.results.isEmpty()) {
-                toastMessage.postValue("CONEXION NO ESTABLECIDA")
+                toastMessage.value = ERROR_INTERNET
                 return@launch
             }
 
-            listCharacter.value = response!!
+            //listCharacter.value = response!!
+            insertDataBase(response!!.results)
+
             if (consumerAll) {
                 do {
 
@@ -48,17 +53,18 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                     response = modelResponse.await()
 
                     if (response != null) {
-                        listCharacter.postValue(response!!)
+                        //listCharacter.postValue(response!!)
+                        insertDataBase(response!!.results)
                     }
 
                 } while (response != null)
-                toastMessage.postValue("Finish Request");
+                toastMessage.value = "FINISH REQUEST"
             }
         }
     }
 
     // Consiste en traer la respuesta por pagina si existe internet
-    fun cicloConsumer(next: Boolean) {
+    fun cycleConsumer(next: Boolean) {
         runCatching {
             runBlocking {
                 if (next) {
@@ -80,7 +86,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
     }
 
-    fun cicloConsumer(next: Boolean, pageCurrent: String) {
+    fun cycleConsumer(next: Boolean, pageCurrent: String) {
         viewModelScope.launch {
 
             listCharacterNotConnection.value = if (next) {
@@ -94,17 +100,6 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
             }
         }
 
-    }
-
-    private var provicionalList = ArrayList<Character>()
-    fun cicloConsumerAll() {
-
-        viewModelScope.launch {
-            for (i in 1..42) {
-                response = mainModel.getResponseDinamic(getStringToInt(response!!.info.next))
-                listCharacter.value = response!!
-            }
-        }
     }
 
     private fun getStringToInt(nextOrPrev: String?): Int {
@@ -126,7 +121,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     }
 
     private var increment: Int = 0
-    fun insertDataBase(character: List<Character>) {
+    private fun insertDataBase(character: List<Character>) {
 
         viewModelScope.launch(Dispatchers.Default) {
             for (i in character) {
@@ -148,6 +143,27 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         return viewModelScope.async {
             mainModel.getCharacterAll()
         }
+    }
+
+    fun init() {
+        viewModelScope.launch {
+            if (!utils.getServiceInternet()) {
+                if(!validExistCharacter()){
+                    delay(1000)
+                    toastMessage.value = ERROR_INTERNET_AND_DB
+                    return@launch
+                }
+                delay(2000)
+                toastMessage.value = ERROR_INTERNET;
+                return@launch
+            }
+            initConsumer(true)
+        }
+
+    }
+
+    private suspend fun validExistCharacter(): Boolean {
+        return mainModel.getExistCharacter() >= 825
     }
 }
 
