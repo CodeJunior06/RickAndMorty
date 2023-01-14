@@ -1,7 +1,6 @@
 package com.codejunior.rickandmorty.view.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,7 @@ import com.codejunior.rickandmorty.databinding.FragmentInformationDialogBinding
 import com.codejunior.rickandmorty.view.OnExit
 
 /**
- * A simple [Fragment] subclass.
- * Use the [InformationDialog.newInstance] factory method to
- * create an instance of this fragment.
+ * Fragment Information
  */
 class InformationDialog(private val callback: OnExit) : DialogFragment() {
 
@@ -43,12 +40,14 @@ class InformationDialog(private val callback: OnExit) : DialogFragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        dialogBinding.buttonDialog.setOnClickListener {
+        dialogBinding.buttonExit.setOnClickListener {
             callback.exitApplication()
-            dialog!!.dismiss()
+            requireDialog().dismiss()
         }
-        dialogBinding.textDialog.text = "PROBANDO PROBANDO".toString()
+
+        dialogBinding.textButtonConnect.setOnClickListener {
+            callback.tryConnection()
+            requireDialog().dismiss()
+        }
     }
-
-
 }

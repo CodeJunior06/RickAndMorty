@@ -62,12 +62,12 @@ class CharacterFragment : Fragment() {
 
             toastMessage(it.toString())
             lifecycleScope.launch(Dispatchers.Main) {
-                val response = viewModel.getCharacterDataBaseLimit().await()
+                viewModel.getCharacterDataBaseLimit()
                 bindingMain.include.pageChange.text = 1.toString()
-                if (bindingMain.include.pageChange.text == 1.toString()) {
+//                if (bindingMain.include.pageChange.text == 1.toString()) {
                     bindingMain.include.linearPrevResponse.visibility = View.GONE
-                }
-                bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
+//                }
+       /*         bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
                 bindingMain.recyclerCharacter.adapter =
                     CharacterAdapter(response) { model ->
                         model as CharacterEntity
@@ -78,7 +78,7 @@ class CharacterFragment : Fragment() {
                             arguments
                         )
                     }
-                bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
+                bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()*/
             }
         }
 
@@ -134,6 +134,7 @@ class CharacterFragment : Fragment() {
             bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()
         }
 
+        //Consult character in data base
         CoroutineScope(Dispatchers.IO).launch {
             val r = viewModel.getCharacterDataBase().await()
             r.listIterator().forEach {

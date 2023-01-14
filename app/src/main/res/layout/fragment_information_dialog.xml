@@ -29,26 +29,44 @@
         </LinearLayout>
 
         <TextView
-            android:textAlignment="center"
             android:id="@+id/textDialog"
+            android:paddingHorizontal="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="13dp"
-            android:text="AQUI VA EL TEXTO CORRESPONDIENTE"
+            android:layout_marginVertical="15dp"
+            android:text="IT IS NOT POSSIBLE TO DOWNLOAD THE INITIAL PARAMETERS"
+            android:textAlignment="center"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonDialog"
-            android:layout_width="200dp"
+        <LinearLayout
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_corner"
-            android:backgroundTint="@color/purple_200"
-            android:text="Acpetar"
-            android:textColor="@color/black"
-            android:textSize="15.4sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
+            <Button
+                android:id="@+id/textButtonConnect"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Try Connection"
+                android:textColor="@color/black" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back_corner"
+                android:backgroundTint="@color/purple_200"
+                android:paddingHorizontal="20dp"
+                android:text="Exit System"
+                android:textColor="@color/black"
+                android:textSize="15.4sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

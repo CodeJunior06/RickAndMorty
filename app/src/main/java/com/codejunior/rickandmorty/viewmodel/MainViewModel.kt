@@ -9,6 +9,8 @@ import com.codejunior.rickandmorty.domain.retrofit.model.character.CharacterResp
 import com.codejunior.rickandmorty.domain.room.entities.CharacterEntity
 import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET
 import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_INTERNET_AND_DB
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_RESPONSE
+import com.codejunior.rickandmorty.view.utilities.Defines.Companion.SUCCESS
 import com.codejunior.rickandmorty.view.utilities.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -17,12 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val mainModel: MainModel) : ViewModel() {
 
-    val listCharacter = MutableLiveData<CharacterResponse>()
-    var listCharacterNotConnection = MutableLiveData<List<CharacterEntity>>()
+    val listCharacter = MutableLiveData<CharacterResponse>() //LIST OF CHARACTER WHEN CONNECTION
+    var listCharacterNotConnection = MutableLiveData<List<CharacterEntity>>() //LIST OF CHARACTER WHEN NOT CONNECTION
 
-    val toastMessage = MutableLiveData<String>()
+    val toastMessage = MutableLiveData<String>() //FOR A FRAGMENT IS VIEW THE CHARACTER WHEN NOT CONNECTION AND ACTIVITY MESSAGE Y ACTION A SYSTEM
 
-    val pageChange = MutableLiveData<Int>()
+    val pageChange = MutableLiveData<Int>() //CHANGE PAGE OF THE FRAGMENT
 
     @Inject
     lateinit var utils: Utils
@@ -41,14 +43,12 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                 return@launch
             }
 
-            //listCharacter.value = response!!
-            insertDataBase(response!!.results)
-
             if (consumerAll) {
+                insertDataBase(response!!.results)
                 do {
 
                     modelResponse =
-                        async { mainModel.getResponseDinamic(getStringToInt(response!!.info.next)) }
+                        async { mainModel.getResponseDynamic(getStringToInt(response!!.info.next)) }
 
                     response = modelResponse.await()
 
@@ -58,8 +58,10 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                     }
 
                 } while (response != null)
-                toastMessage.value = "FINISH REQUEST"
+                toastMessage.value = SUCCESS
+                return@launch
             }
+            listCharacter.value = response!!
         }
     }
 
@@ -67,10 +69,10 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     fun cycleConsumer(next: Boolean) {
         runCatching {
             runBlocking {
-                if (next) {
-                    response = mainModel.getResponseDinamic(getStringToInt(response!!.info.next))
+                response = if (next) {
+                    mainModel.getResponseDynamic(getStringToInt(response!!.info.next))
                 } else {
-                    response = mainModel.getResponseDinamic(getStringToInt(response!!.info.prev))
+                    mainModel.getResponseDynamic(getStringToInt(response!!.info.prev))
                 }
             }
         }.onSuccess {
@@ -79,7 +81,7 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
 
         }.onFailure {
             if (response == null) {
-                toastMessage.value = "RESPONSE ERROR TO REQUEST"
+                toastMessage.value = ERROR_RESPONSE
                 return
             }
         }
@@ -132,10 +134,12 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
         }
     }
 
-    fun getCharacterDataBaseLimit(): Deferred<List<CharacterEntity>> {
-
-        return viewModelScope.async {
-            mainModel.getCharacterLimit()
+    fun getCharacterDataBaseLimit(){
+        viewModelScope.launch {
+            val job = viewModelScope.async {
+                mainModel.getCharacterLimit()
+            }
+            listCharacterNotConnection.value = job.await()
         }
     }
 
@@ -155,6 +159,11 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
                 }
                 delay(2000)
                 toastMessage.value = ERROR_INTERNET;
+                return@launch
+            }
+            if(validExistCharacter()){
+                delay(2000)
+                toastMessage.value = SUCCESS
                 return@launch
             }
             initConsumer(true)

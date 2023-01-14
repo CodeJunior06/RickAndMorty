@@ -17,12 +17,16 @@ class MainModel @Inject constructor(
 
     suspend fun getResponse(): CharacterResponse? {
         return withContext(Dispatchers.IO) {
-            val response = retrofit.getCharacterPage(1)
-            response.body()
+            var response:CharacterResponse? = null
+            kotlin.runCatching {
+                val responseRetrofit = retrofit.getCharacterPage(1)
+                response = responseRetrofit.body()
+            }
+            response
         }
     }
 
-    suspend fun getResponseDinamic(page: Int): CharacterResponse? {
+    suspend fun getResponseDynamic(page: Int): CharacterResponse? {
         return withContext(Dispatchers.IO) {
             if (page == -1) {
                 null
@@ -54,7 +58,6 @@ class MainModel @Inject constructor(
     }
 
     suspend fun getCharacterAll(): List<CharacterEntity> {
-
         return withContext(Dispatchers.IO) {
             room.initDataBaseDAO().getCharacterAll()
         }
@@ -65,6 +68,4 @@ class MainModel @Inject constructor(
             room.initDataBaseDAO().getCountCharacter()
         }
     }
-
-
 }
