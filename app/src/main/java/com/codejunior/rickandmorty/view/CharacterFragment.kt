@@ -60,25 +60,11 @@ class CharacterFragment : Fragment() {
 
         viewModel.toastMessage.observe(viewLifecycleOwner) {
 
-            toastMessage(it.toString())
+            toastMessage(it.toString()) // MIRAR EL PORQUE SE VUELVE A LLAMAR
             lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.getCharacterDataBaseLimit()
                 bindingMain.include.pageChange.text = 1.toString()
-//                if (bindingMain.include.pageChange.text == 1.toString()) {
-                    bindingMain.include.linearPrevResponse.visibility = View.GONE
-//                }
-       /*         bindingMain.recyclerCharacter.layoutManager = GridLayoutManager(requireContext(), 2)
-                bindingMain.recyclerCharacter.adapter =
-                    CharacterAdapter(response) { model ->
-                        model as CharacterEntity
-                        toastMessage(model.name)
-                        arguments?.putParcelable("character", model)
-                        findNavController().navigate(
-                            R.id.action_characterFragment_to_informationFragment,
-                            arguments
-                        )
-                    }
-                bindingMain.recyclerCharacter.adapter!!.notifyDataSetChanged()*/
+                bindingMain.include.linearPrevResponse.visibility = View.GONE
             }
         }
 

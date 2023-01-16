@@ -23,9 +23,10 @@ data class CharacterEntity(
     @ColumnInfo(name = "cha_image") val image: String,
     @ColumnInfo(name = "cha_url") val url: String,
     @ColumnInfo(name = "cha_created") val created: String,
+    @ColumnInfo(name = "cha_base64") val base64: String,
 ) : IBaseModel, Parcelable
 
-fun Character.render(character: Character) = CharacterEntity(
+fun Character.render(character: Character,base64:String) = CharacterEntity(
     character.id,
     character.name,
     character.status,
@@ -37,5 +38,6 @@ fun Character.render(character: Character) = CharacterEntity(
     character.episode.size,
     character.image,
     character.url,
-    character.created
+    character.created,
+    base64
 )

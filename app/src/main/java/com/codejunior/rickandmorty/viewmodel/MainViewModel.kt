@@ -1,8 +1,10 @@
 package com.codejunior.rickandmorty.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.codejunior.rickandmorty.domain.retrofit.model.character.Character
 import com.codejunior.rickandmorty.model.MainModel
 import com.codejunior.rickandmorty.domain.retrofit.model.character.CharacterResponse
@@ -13,11 +15,12 @@ import com.codejunior.rickandmorty.view.utilities.Defines.Companion.ERROR_RESPON
 import com.codejunior.rickandmorty.view.utilities.Defines.Companion.SUCCESS
 import com.codejunior.rickandmorty.view.utilities.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val mainModel: MainModel) : ViewModel() {
+class MainViewModel @Inject constructor(private val mainModel: MainModel, @ApplicationContext private  val context: Context) : ViewModel() {
 
     val listCharacter = MutableLiveData<CharacterResponse>() //LIST OF CHARACTER WHEN CONNECTION
     var listCharacterNotConnection = MutableLiveData<List<CharacterEntity>>() //LIST OF CHARACTER WHEN NOT CONNECTION
@@ -123,15 +126,19 @@ class MainViewModel @Inject constructor(private val mainModel: MainModel) : View
     }
 
     private var increment: Int = 0
-    private fun insertDataBase(character: List<Character>) {
+    private suspend fun insertDataBase(character: List<Character>) {
 
-        viewModelScope.launch(Dispatchers.Default) {
             for (i in character) {
-                mainModel.initInsert(i)
+               val a = viewModelScope.async(Dispatchers.Default) {
+                   Glide.with(context)
+                    .asBitmap()
+                    .load(i.image).submit().get()// sample image }
+                    }
+                utils.encodeImageBitmap(a.await())?.let { mainModel.initInsert(i, it) }
                 println("Personage: $increment ${i.name}")
                 increment++
             }
-        }
+
     }
 
     fun getCharacterDataBaseLimit(){

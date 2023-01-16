@@ -1,5 +1,6 @@
 package com.codejunior.rickandmorty.view.adapter
 
+import android.util.Base64
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,19 +15,20 @@ class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemCharacterBinding.bind(view)
 
     fun render(character: IBaseModel, onClickListener: (IBaseModel) -> Unit) {
-        if(character is Character){
+        if (character is Character) {
             binding.characterSpecie.text = character.species
             binding.characterName.text = character.name
-            binding.imgCharacter.setOnClickListener { onClickListener(character) }
-            Glide.with(binding.imgCharacter.context).load(character.image).into(binding.imgCharacter)
-        }else{
+            Glide.with(binding.imgCharacter.context).load(character.image)
+                .placeholder(R.drawable.icon).error(R.drawable.icon).into(binding.imgCharacter)
+        } else {
             character as CharacterEntity
             binding.characterSpecie.text = character.species
             binding.characterName.text = character.name
-            binding.imgCharacter.setOnClickListener { onClickListener(character) }
-            Glide.with(binding.imgCharacter.context).load(character.image).placeholder(R.drawable.icon).error(R.drawable.icon).into(binding.imgCharacter)
+            val imageByteArray: ByteArray = Base64.decode(character.base64, Base64.DEFAULT)
+            Glide.with(binding.imgCharacter.context).load(imageByteArray)
+                .placeholder(R.drawable.icon).error(R.drawable.icon).into(binding.imgCharacter)
         }
-
+        binding.imgCharacter.setOnClickListener { onClickListener(character) }
 
     }
 

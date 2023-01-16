@@ -37,10 +37,9 @@ class MainModel @Inject constructor(
         }
     }
 
-    suspend fun initInsert(character: Character) {
-
+    suspend fun initInsert(character: Character,bitmap: String) {
         withContext(Dispatchers.IO) {
-            room.initDataBaseDAO().insertDevice(character.render(character))
+            room.initDataBaseDAO().insertDevice(character.render(character,bitmap))
         }
     }
 
